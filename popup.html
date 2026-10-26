@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Recap Reel</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --surface: #1f1f1f;
+      --surface-hover: #2c2c2c;
+      --border: rgba(255, 255, 255, 0.12);
+      --text: #f1f1f1;
+      --muted: #aaaaaa;
+      --accent: #ff0033;
+      --blue: #3ea6ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 320px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 14px;
+      font-size: 13px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .video-meta {
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    .tiers {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .tier-btn {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 6px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .tier-btn:hover:not(:disabled) {
+      background: var(--surface-hover);
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .tier-btn.active {
+      border-color: var(--accent);
+      background: rgba(255, 0, 51, 0.15);
+    }
+
+    .tier-btn:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+    }
+
+    .tier-time {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .tier-sub {
+      font-size: 10.5px;
+      color: var(--muted);
+    }
+
+    .status-box {
+      min-height: 32px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .status-box.error {
+      color: #ff6b6b;
+      border-color: rgba(255, 107, 107, 0.35);
+    }
+
+    .status-box.playing {
+      color: #69db7c;
+      border-color: rgba(105, 219, 124, 0.35);
+    }
+
+    .link-btn {
+      background: none;
+      border: none;
+      color: var(--blue);
+      font-size: 11.5px;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+      white-space: nowrap;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 10px 0;
+    }
+
+    .key-section label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .key-section label a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .key-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .key-input {
+      flex: 1;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .key-input:focus {
+      border-color: var(--blue);
+    }
+
+    .save-btn {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .save-btn:hover {
+      background: var(--surface-hover);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span>Recap Reel</span>
+    </div>
+    <span id="videoMeta" class="video-meta"></span>
+  </div>
+
+  <div class="tiers">
+    <button id="btn2" class="tier-btn" data-budget="120">
+      <span class="tier-time">2 min</span>
+      <span class="tier-sub">Top claims</span>
+    </button>
+    <button id="btn10" class="tier-btn" data-budget="600">
+      <span class="tier-time">10 min</span>
+      <span class="tier-sub" id="sub10">Deep dive</span>
+    </button>
+    <button id="btn30" class="tier-btn" data-budget="1800">
+      <span class="tier-time">30 min</span>
+      <span class="tier-sub" id="sub30">Full synthesis</span>
+    </button>
+  </div>
+
+  <div id="statusBox" class="status-box">
+    <span id="statusText">Select a reel duration above.</span>
+    <button id="rerankBtn" class="link-btn" style="display: none;" title="Clear cached scores and re-run Gemini">Re-rank</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="key-section">
+    <label for="apiKeyInput">
+      <span>Gemini API Key (Google AI Studio)</span>
+      <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer">Get free key ↗</a>
+    </label>
+    <div class="key-row">
+      <input id="apiKeyInput" type="password" class="key-input" placeholder="AIzaSy..." autocomplete="off" />
+      <button id="saveKeyBtn" class="save-btn">Save</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
